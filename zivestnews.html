@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zinvest</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+
+html{scroll-behavior:smooth;}
+
+body{
+background:linear-gradient(135deg,#0a0a0a,#1a0000,#0a0a0a);
+color:#f1f5f9;
+}
+
+/* NAV */
+nav{
+position:fixed;
+top:0;
+width:100%;
+padding:18px 40px;
+display:flex;
+justify-content:space-between;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(12px);
+z-index:1000
+}
+
+nav a{
+color:#aaa;
+text-decoration:none;
+}
+
+nav a:visited,
+nav a:active{
+color:#aaa;
+}
+
+nav a:hover{
+color:#ef4444;
+}
+
+.logo{display:flex;flex-direction:column}
+.home-link{font-size:0.7rem;color:#aaa;text-decoration:none}
+
+/* TICKER */
+.ticker-wrap{
+position:fixed;
+top:70px;
+width:100%;
+background:#000;
+overflow:hidden;
+}
+
+.ticker{
+display:flex;
+white-space:nowrap;
+animation:scroll 22s linear infinite;
+}
+
+.ticker span{padding:10px 30px}
+.green{color:#22c55e}
+.red{color:#ef4444}
+
+@keyframes scroll{
+0%{transform:translateX(100%)}
+100%{transform:translateX(-100%)}
+}
+
+/* MAIN */
+.container{
+padding-top:140px;
+width:95%;
+max-width:1200px;
+margin:auto;
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:25px;
+}
+
+/* TITLES */
+.section-title{
+font-size:1.4rem;
+margin-bottom:10px;
+}
+
+.updated{
+font-size:0.8rem;
+color:#aaa;
+margin-bottom:10px;
+}
+.updated strong{color:#fff}
+
+/* SCROLL BOX */
+.terminal{
+height:140px;
+overflow-y:auto;
+border-top:1px solid rgba(255,255,255,0.05);
+border-bottom:1px solid rgba(255,255,255,0.05);
+padding:10px;
+}
+
+.terminal-text{
+color:#ccc;
+line-height:1.7;
+font-size:0.95rem;
+}
+
+/* LIVE NEWS */
+.live-news{
+background:rgba(255,255,255,0.03);
+padding:15px;
+border-radius:10px;
+border:1px solid rgba(255,255,255,0.05);
+max-height:500px;
+overflow:auto;
+}
+
+.live-item{
+margin-bottom:15px;
+border-bottom:1px solid rgba(255,255,255,0.05);
+padding-bottom:10px;
+}
+
+.live-item h4{
+font-size:0.9rem;
+margin-bottom:5px;
+}
+
+.live-item p{
+font-size:0.8rem;
+color:#aaa;
+}
+
+/* ABOUT */
+.about-section{
+margin-top:60px;
+}
+
+.about-card{
+background:rgba(255,255,255,0.03);
+padding:25px;
+border-radius:15px;
+border:1px solid rgba(255,255,255,0.05);
+color:#ccc;
+line-height:1.6;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav>
+<div class="logo">
+<h3>Zinvest</h3>
+<a href="#" class="home-link">Home</a>
+</div>
+
+<a href="#about">About</a>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+<div class="ticker" id="ticker"></div>
+</div>
+
+<!-- MAIN -->
+<div class="container">
+
+<!-- LEFT -->
+<div>
+<h2 class="section-title">Market Brief</h2>
+<div class="updated">Last Updated: <strong id="updateTime"></strong></div>
+
+<div class="terminal" id="terminalBox">
+<div class="terminal-text" id="fileNews"></div>
+</div>
+</div>
+
+<!-- RIGHT -->
+<div>
+<h2 class="section-title">Live News</h2>
+<div class="live-news" id="liveNews">Loading...</div>
+</div>
+
+</div>
+
+<!-- ABOUT -->
+<div class="container about-section" id="about">
+<div>
+<h2 class="section-title">About</h2>
+<div class="about-card">
+Zinvest is focused on disciplined capital management and structured trading. 
+This platform is being built to deliver clear, high-quality market insights 
+with a focus on consistency, simplicity, and actionable decision-making.
+</div>
+</div>
+</div>
+
+<script>
+
+// TICKER
+const tickerData = [
+["NIFTY 50","22300","+0.45%"],
+["SENSEX","73800","+0.38%"],
+["BANKNIFTY","48100","-0.25%"],
+["MIDCAP","10250","+0.62%"]
+];
+
+function loadTicker(){
+let html="";
+tickerData.forEach(i=>{
+let color=i[2].includes("-")?"red":"green";
+html+=`<span class="${color}">${i[0]} ${i[1]} (${i[2]})</span>`;
+});
+document.getElementById("ticker").innerHTML=html;
+}
+
+// NEWS
+const newsData = [
+["Markets strong","Equities opened higher on global cues"],
+["Banking weak","Profit booking seen in private banks"],
+["IT gains","Global optimism drives IT rally"],
+["Energy mixed","Oil volatility impacts stocks"],
+["Global cues positive","US markets closed higher boosting sentiment"]
+];
+
+function loadFileNews(){
+let text = newsData.map(n=>`• ${n[0]}: ${n[1]}`).join("  ");
+document.getElementById("fileNews").innerText=text;
+}
+
+// TIME
+document.getElementById("updateTime").innerText =
+"19 Apr 2026, 07:05 AM IST";
+
+// AUTO SCROLL
+let scrollInterval;
+const box = document.getElementById("terminalBox");
+
+function startAutoScroll(){
+scrollInterval = setInterval(()=>{
+box.scrollTop += 1;
+
+if(box.scrollTop + box.clientHeight >= box.scrollHeight){
+box.scrollTop = 0;
+}
+},50);
+}
+
+function stopAutoScroll(){
+clearInterval(scrollInterval);
+}
+
+box.addEventListener("mouseenter", stopAutoScroll);
+box.addEventListener("mouseleave", startAutoScroll);
+
+// LIVE NEWS
+async function loadLiveNews(){
+try{
+let url="https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=5aa9df9361a0443b8f950f85c1dff11a";
+
+let res=await fetch("https://api.allorigins.win/get?url="+encodeURIComponent(url));
+let raw=await res.json();
+let data=JSON.parse(raw.contents);
+
+let container=document.getElementById("liveNews");
+container.innerHTML="";
+
+data.articles.slice(0,8).forEach(n=>{
+let div=document.createElement("div");
+div.className="live-item";
+
+div.innerHTML=`
+<h4>${n.title}</h4>
+<p>${n.description||""}</p>
+`;
+
+container.appendChild(div);
+});
+
+}catch{
+document.getElementById("liveNews").innerHTML="Live news unavailable";
+}
+}
+
+// INIT
+loadTicker();
+loadFileNews();
+startAutoScroll();
+loadLiveNews();
+
+</script>
+
+</body>
+</html>
