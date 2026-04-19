@@ -110,6 +110,10 @@ line-height:1.7;
 font-size:0.95rem;
 }
 
+.brief-paragraph{
+margin-bottom:12px;
+}
+
 /* LIVE NEWS */
 .live-news{
 background:rgba(255,255,255,0.03);
@@ -184,7 +188,7 @@ line-height:1.6;
 
 <!-- RIGHT -->
 <div>
-<h2 class="section-title">Live News</h2>
+<h2 class="section-title">Live Market News</h2>
 <div class="live-news" id="liveNews">Loading...</div>
 </div>
 
@@ -204,48 +208,229 @@ with a focus on consistency, simplicity, and actionable decision-making.
 
 <script>
 
-// TICKER
-const tickerData = [
-["NIFTY500","22869","+0.94%"],
-["NIFTY50","24354","+0.65%"],
-["SENSEX","78493","+0.65%"],
-["BANKNIFTY","56565","+0.85%"],
-["MIDCAP","13838","+1.13%"],
-["INDIAVIX","17.20","-4.87%"]
+const fallbackTickerData = [
+["NIFTY 500","19800","+0.30%"],
+["NIFTY 50","22300","+0.45%"],
+["SENSEX","73800","+0.38%"],
+["BANKNIFTY","48100","-0.25%"],
+["NIFTY MIDCAP","10250","+0.62%"]
 ];
 
-function loadTicker(){
-let html="";
-tickerData.forEach(i=>{
-let color=i[2].includes("-")?"red":"green";
-html+=`<span class="${color}">${i[0]} ${i[1]} (${i[2]})</span>`;
+const fallbackNewsData = [
+["Markets open strong on global cues","Indian equities started higher supported by IT and energy stocks."],
+["Banking stocks under pressure","Profit booking seen in private banks while PSU banks remain stable."],
+["IT sector shows strength","Renewed global optimism drives buying in major IT stocks."]
+];
+
+const fallbackBriefParagraphs = [
+"Global risk appetite remained firm after broad-based equity gains and stable bond yields.",
+"Domestic indices stayed resilient with IT, energy, and select financials providing leadership.",
+"Positioning remained tactical as traders monitored oil volatility, currency movement, and policy signals."
+];
+
+const REFRESH_MS = 30000;
+let currentTickers = [...fallbackTickerData];
+
+function parseRows(content, expectedParts){
+return content
+.split("\n")
+.map(line=>line.trim())
+.filter(Boolean)
+.map(line=>line.split("|").map(part=>part.trim()))
+.filter(parts=>parts.length >= expectedParts);
+}
+
+async function loadTextFile(path){
+const res = await fetch(`${path}?t=${Date.now()}`, { cache: "no-store" });
+if(!res.ok){
+throw new Error(`Failed to load ${path}`);
+}
+return res.text();
+}
+
+function mergeTickers(existing, incoming){
+const incomingMap = new Map(incoming.map(item=>[item[0], item]));
+const merged = existing.map(item=>incomingMap.get(item[0]) || item);
+
+incoming.forEach(item=>{
+if(!existing.some(existingItem=>existingItem[0] === item[0])){
+merged.push(item);
+}
 });
-document.getElementById("ticker").innerHTML=html;
+
+return merged;
 }
 
-// NEWS
-const newsData = [
-["Markets end positive","Nifty above 24,350 and Sensex near 78,000 despite volatility"],
-["Midcaps lead rally","Broader markets outperform with strong participation"],
-["Oil & global cues","Cooling tensions and softer crude support sentiment"],
-["FII selling continues","Retail and SIP flows provide strong support"],
-["Sector rotation","IT, metals and FMCG see active money movement"]
-];
+function renderTicker(){
+const ticker = document.getElementById("ticker");
+ticker.innerHTML = "";
 
-function loadFileNews(){
-let text = newsData.map(n=>`• ${n[0]}: ${n[1]}`).join("  ");
-document.getElementById("fileNews").innerText=text;
+currentTickers.forEach(item=>{
+const span = document.createElement("span");
+span.className = (item[2] || "").includes("-") ? "red" : "green";
+span.textContent = `${item[0]} ${item[1]} (${item[2]})`;
+ticker.appendChild(span);
+});
 }
 
-// TIME
-document.getElementById("updateTime").innerText =
-"19 Apr 2026, 03:15 PM IST";
+async function loadTickerFromFile(){
+const raw = await loadTextFile("ticker.txt");
+return parseRows(raw, 3).map(parts=>[parts[0], parts[1], parts[2]]);
+}
+
+async function loadTickersFromApi(){
+const res = await fetch(`/.netlify/functions/live-tickers?t=${Date.now()}`, { cache: "no-store" });
+if(!res.ok){
+throw new Error("Ticker API unavailable");
+}
+
+const data = await res.json();
+const rows = Array.isArray(data?.items) ? data.items : [];
+
+return rows
+.map(item=>[
+String(item.symbol || "").trim(),
+String(item.price ?? "").trim(),
+String(item.change || "").trim()
+])
+.filter(item=>item[0] && item[1] && item[2]);
+}
+
+async function refreshTicker(){
+try{
+let parsed = [];
+
+try{
+parsed = await loadTickersFromApi();
+}catch{
+parsed = await loadTickerFromFile();
+}
+
+if(parsed.length){
+currentTickers = mergeTickers(currentTickers, parsed);
+}
+}catch{
+currentTickers = [...currentTickers];
+}
+
+renderTicker();
+}
+
+function renderBrief(paragraphs){
+const fileNews = document.getElementById("fileNews");
+fileNews.innerHTML = "";
+
+paragraphs.forEach(text=>{
+const p = document.createElement("p");
+p.className = "brief-paragraph";
+p.textContent = text;
+fileNews.appendChild(p);
+});
+
+box.scrollTop = 0;
+}
+
+function renderLiveNews(newsRows){
+const container = document.getElementById("liveNews");
+container.innerHTML = "";
+
+newsRows.forEach(row=>{
+const div = document.createElement("div");
+div.className = "live-item";
+
+const title = document.createElement("h4");
+title.textContent = row[0];
+const body = document.createElement("p");
+body.textContent = row[1];
+
+div.appendChild(title);
+div.appendChild(body);
+container.appendChild(div);
+});
+}
+
+async function loadNewsFromFile(){
+const raw = await loadTextFile("news.txt");
+return parseRows(raw, 2).map(parts=>[parts[0], parts[1]]);
+}
+
+async function loadLiveNewsFromApi(){
+const res = await fetch(`/.netlify/functions/live-news?t=${Date.now()}`, { cache: "no-store" });
+if(!res.ok){
+throw new Error("Live news API unavailable");
+}
+
+const data = await res.json();
+const rows = Array.isArray(data?.items) ? data.items : [];
+
+return rows
+.map(item=>{
+const title = String(item.title || "").trim();
+const detailParts = [
+item.body ? String(item.body).trim() : "",
+item.source ? `Source: ${String(item.source).trim()}` : "",
+item.publishedAt ? `Published: ${String(item.publishedAt).trim()}` : ""
+].filter(Boolean);
+
+return [title, detailParts.join(" | ")];
+})
+.filter(item=>item[0] && item[1]);
+}
+
+async function refreshNews(){
+let newsRows = [...fallbackNewsData];
+
+try{
+let parsed = [];
+
+try{
+parsed = await loadLiveNewsFromApi();
+}catch{
+parsed = await loadNewsFromFile();
+}
+
+if(parsed.length){
+newsRows = parsed;
+}
+}catch{}
+
+renderLiveNews(newsRows);
+}
+
+async function refreshMarketBrief(){
+let paragraphs = [...fallbackBriefParagraphs];
+
+try{
+const raw = await loadTextFile("market-brief.txt");
+const parsed = raw
+.split("\n")
+.map(line=>line.trim())
+.filter(Boolean);
+
+if(parsed.length){
+paragraphs = parsed;
+}
+}catch{}
+
+renderBrief(paragraphs);
+}
+
+async function refreshUpdateTime(){
+try{
+const raw = await loadTextFile("update.txt");
+const text = raw.trim();
+document.getElementById("updateTime").innerText = text || "Awaiting update";
+}catch{
+document.getElementById("updateTime").innerText = "Awaiting update";
+}
+}
 
 // AUTO SCROLL
 let scrollInterval;
 const box = document.getElementById("terminalBox");
 
 function startAutoScroll(){
+clearInterval(scrollInterval);
 scrollInterval = setInterval(()=>{
 box.scrollTop += 1;
 
@@ -262,40 +447,17 @@ clearInterval(scrollInterval);
 box.addEventListener("mouseenter", stopAutoScroll);
 box.addEventListener("mouseleave", startAutoScroll);
 
-// LIVE NEWS
-async function loadLiveNews(){
-try{
-let url="https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=5aa9df9361a0443b8f950f85c1dff11a";
-
-let res=await fetch("https://api.allorigins.win/get?url="+encodeURIComponent(url));
-let raw=await res.json();
-let data=JSON.parse(raw.contents);
-
-let container=document.getElementById("liveNews");
-container.innerHTML="";
-
-data.articles.slice(0,8).forEach(n=>{
-let div=document.createElement("div");
-div.className="live-item";
-
-div.innerHTML=`
-<h4>${n.title}</h4>
-<p>${n.description||""}</p>
-`;
-
-container.appendChild(div);
-});
-
-}catch{
-document.getElementById("liveNews").innerHTML="Live news unavailable";
-}
-}
-
 // INIT
-loadTicker();
-loadFileNews();
 startAutoScroll();
-loadLiveNews();
+refreshTicker();
+refreshNews();
+refreshMarketBrief();
+refreshUpdateTime();
+
+setInterval(refreshTicker, REFRESH_MS);
+setInterval(refreshNews, REFRESH_MS);
+setInterval(refreshMarketBrief, REFRESH_MS);
+setInterval(refreshUpdateTime, REFRESH_MS);
 
 </script>
 
