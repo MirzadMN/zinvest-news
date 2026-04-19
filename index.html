@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zinvest news</title>
+<title>Zinvest News</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
 
@@ -12,18 +12,20 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:'Inter',sans-serif
+font-family:'Inter',sans-serif;
 }
 
 body{
 height:100vh;
+overflow:hidden;
 display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
-background:linear-gradient(135deg,#0a0a0a,#1a0000,#0a0a0a);
+background:linear-gradient(135deg,#050505,#120000,#050505);
 color:#f1f5f9;
 text-align:center;
+position:relative;
 }
 
 /* NAV */
@@ -35,8 +37,9 @@ padding:20px 40px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-background:rgba(0,0,0,0.5);
-backdrop-filter:blur(10px);
+background:rgba(0,0,0,0.4);
+backdrop-filter:blur(12px);
+z-index:10;
 }
 
 .logo{
@@ -47,10 +50,11 @@ align-items:flex-start;
 
 .logo h3{
 margin:0;
+color:#fff;
 }
 
 .home-link{
-font-size:0.7rem;
+font-size:0.75rem;
 color:#aaa;
 text-decoration:none;
 }
@@ -60,9 +64,10 @@ color:#aaa;
 text-decoration:none;
 }
 
-/* MAIN MESSAGE */
+/* MAIN */
 .message{
 max-width:600px;
+z-index:10;
 }
 
 .message h1{
@@ -72,7 +77,65 @@ margin-bottom:15px;
 
 .message p{
 color:#aaa;
-font-size:1rem;
+}
+
+/* FLOATING INDICES */
+.index{
+position:absolute;
+font-size:0.85rem;
+color:rgba(255,255,255,0.25);
+padding:6px 10px;
+border:1px solid rgba(255,255,255,0.08);
+border-radius:8px;
+backdrop-filter:blur(6px);
+animation:float 18s linear infinite;
+white-space:nowrap;
+}
+
+@keyframes float{
+0%{
+transform:translateY(100vh) translateX(0);
+opacity:0;
+}
+10%{opacity:1;}
+100%{
+transform:translateY(-120vh) translateX(40px);
+opacity:0;
+}
+}
+
+/* subtle glow */
+.index::before{
+content:"";
+position:absolute;
+inset:0;
+background:rgba(255,255,255,0.02);
+border-radius:8px;
+}
+
+/* code rain background */
+.code{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+overflow:hidden;
+z-index:0;
+}
+
+.code span{
+position:absolute;
+top:-50px;
+color:rgba(0,255,120,0.08);
+font-size:14px;
+animation:fall linear infinite;
+}
+
+@keyframes fall{
+to{
+transform:translateY(110vh);
+}
 }
 </style>
 </head>
@@ -89,11 +152,36 @@ font-size:1rem;
 <a href="#">About</a>
 </nav>
 
-<!-- MESSAGE -->
+<!-- BACKGROUND CODE RAIN -->
+<div class="code" id="code"></div>
+
+<!-- FLOATING INDICES -->
+<div class="index" style="left:10%; animation-duration:22s;">NIFTY 50 ▲ 0.8%</div>
+<div class="index" style="left:25%; animation-duration:18s;">SENSEX ▲ 0.6%</div>
+<div class="index" style="left:40%; animation-duration:25s;">BANKNIFTY ▼ 0.3%</div>
+<div class="index" style="left:60%; animation-duration:20s;">IT INDEX ▲ 1.2%</div>
+<div class="index" style="left:75%; animation-duration:24s;">FINANCE ▲ 0.4%</div>
+
+<!-- MAIN -->
 <div class="message">
-<h1>🚧 Site is Being Built</h1>
-<p>Thanks for your interest. We’re working on something powerful. Stay tuned.</p>
+<h1>🚧 Building Zinvest Engine</h1>
+<p>Live market intelligence system is being deployed. Data streams initializing...</p>
 </div>
+
+<script>
+// Code rain generator (clean fintech style)
+const code = document.getElementById("code");
+const symbols = ["{ }","<>","01","API","TRADE","NIFTY","BUY","SELL","₹","DATA","LOAD","SYNC"];
+
+for(let i=0;i<40;i++){
+let span = document.createElement("span");
+span.innerText = symbols[Math.floor(Math.random()*symbols.length)];
+span.style.left = Math.random()*100 + "vw";
+span.style.animationDuration = (5 + Math.random()*10) + "s";
+span.style.opacity = Math.random();
+code.appendChild(span);
+}
+</script>
 
 </body>
 </html>
