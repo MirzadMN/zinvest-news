@@ -206,10 +206,12 @@ with a focus on consistency, simplicity, and actionable decision-making.
 
 // TICKER
 const tickerData = [
-["NIFTY 50","22300","+0.45%"],
-["SENSEX","73800","+0.38%"],
-["BANKNIFTY","48100","-0.25%"],
-["MIDCAP","10250","+0.62%"]
+["NIFTY500","22869","+0.94%"],
+["NIFTY50","24354","+0.65%"],
+["SENSEX","78493","+0.65%"],
+["BANKNIFTY","56565","+0.85%"],
+["MIDCAP","13838","+1.13%"],
+["INDIAVIX","17.20","-4.87%"]
 ];
 
 function loadTicker(){
@@ -223,11 +225,11 @@ document.getElementById("ticker").innerHTML=html;
 
 // NEWS
 const newsData = [
-["Markets strong","Equities opened higher on global cues"],
-["Banking weak","Profit booking seen in private banks"],
-["IT gains","Global optimism drives IT rally"],
-["Energy mixed","Oil volatility impacts stocks"],
-["Global cues positive","US markets closed higher boosting sentiment"]
+["Markets end positive","Nifty above 24,350 and Sensex near 78,000 despite volatility"],
+["Midcaps lead rally","Broader markets outperform with strong participation"],
+["Oil & global cues","Cooling tensions and softer crude support sentiment"],
+["FII selling continues","Retail and SIP flows provide strong support"],
+["Sector rotation","IT, metals and FMCG see active money movement"]
 ];
 
 function loadFileNews(){
@@ -237,7 +239,7 @@ document.getElementById("fileNews").innerText=text;
 
 // TIME
 document.getElementById("updateTime").innerText =
-"19 Apr 2026, 07:05 AM IST";
+"19 Apr 2026, 03:15 PM IST";
 
 // AUTO SCROLL
 let scrollInterval;
