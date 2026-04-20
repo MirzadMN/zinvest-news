@@ -35,17 +35,12 @@ color:#aaa;
 text-decoration:none;
 }
 
-nav a:visited,
-nav a:active{
-color:#aaa;
-}
-
 nav a:hover{
 color:#ef4444;
 }
 
 .logo{display:flex;flex-direction:column}
-.home-link{font-size:0.7rem;color:#aaa;text-decoration:none}
+.home-link{font-size:0.7rem;color:#aaa}
 
 /* TICKER */
 .ticker-wrap{
@@ -97,17 +92,28 @@ margin-bottom:10px;
 
 /* SCROLL BOX */
 .terminal{
-height:140px;
+height:400px;
 overflow-y:auto;
 border-top:1px solid rgba(255,255,255,0.05);
 border-bottom:1px solid rgba(255,255,255,0.05);
 padding:10px;
 }
 
-.terminal-text{
-color:#ccc;
-line-height:1.7;
+/* NEWS POINTS */
+.news-point{
+margin-bottom:12px;
+padding-bottom:8px;
+border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+.news-point strong{
+color:#fff;
 font-size:0.95rem;
+}
+
+.news-point span{
+color:#aaa;
+font-size:0.85rem;
 }
 
 /* LIVE NEWS */
@@ -178,7 +184,7 @@ line-height:1.6;
 <div class="updated">Last Updated: <strong id="updateTime"></strong></div>
 
 <div class="terminal" id="terminalBox">
-<div class="terminal-text" id="fileNews"></div>
+<div id="fileNews"></div>
 </div>
 </div>
 
@@ -206,12 +212,12 @@ with a focus on consistency, simplicity, and actionable decision-making.
 
 // TICKER
 const tickerData = [
-["NIFTY500","22869","+0.94%"],
-["NIFTY50","24354","+0.65%"],
-["SENSEX","78493","+0.65%"],
-["BANKNIFTY","56565","+0.85%"],
-["MIDCAP","13838","+1.13%"],
-["INDIAVIX","17.20","-4.87%"]
+["NIFTY500","22865","-0.02%"],
+["NIFTY50","24365","+0.05%"],
+["SENSEX","78520","+0.03%"],
+["BANKNIFTY","56582","+0.03%"],
+["MIDCAP","13807","-0.23%"],
+["INDIAVIX","18.79","+9.21%"]
 ];
 
 function loadTicker(){
@@ -223,18 +229,29 @@ html+=`<span class="${color}">${i[0]} ${i[1]} (${i[2]})</span>`;
 document.getElementById("ticker").innerHTML=html;
 }
 
-// NEWS
+// MARKET BRIEF (VERTICAL POINTS)
 const newsData = [
-["Markets end positive","Nifty above 24,350 and Sensex near 78,000 despite volatility"],
-["Midcaps lead rally","Broader markets outperform with strong participation"],
-["Oil & global cues","Cooling tensions and softer crude support sentiment"],
-["FII selling continues","Retail and SIP flows provide strong support"],
-["Sector rotation","IT, metals and FMCG see active money movement"]
+["Market Overview","The Indian equity markets had a largely sideways session, with both the BSE Sensex and Nifty 50 ending almost flat. Despite mild positive closing numbers, the day was marked by intraday volatility, reflecting a lack of strong conviction from either bulls or bears. Early gains were capped as traders chose to stay cautious amid global uncertainties, particularly rising geopolitical tensions and elevated crude oil prices."],
+
+["Sectoral Performance","Sector-wise, the market showed a clear divergence rather than broad participation. PSU banking stocks and select media counters provided upward momentum, benefiting from continued institutional interest and valuation comfort. On the other hand, IT stocks remained under pressure due to weak global cues and uncertainty around demand outlook, while the realty sector also saw selling pressure, possibly due to profit booking after recent rallies. This rotation indicates that the market is currently driven more by selective opportunities than by a broad bullish trend."],
+
+["Banking & Financials","Banking stocks played a crucial role in holding the indices steady. Heavyweights like ICICI Bank and State Bank of India showed strength and supported the market, aided by positive earnings sentiment and steady asset quality expectations. However, this strength was offset by weakness in HDFC Bank and Kotak Mahindra Bank, which faced selling pressure. The divergence within financials highlights a stock-specific, earnings-driven market rather than a uniform sectoral move."],
+
+["Broader Market Trend","The broader market continued to underperform the benchmarks. Midcap and smallcap indices ended in the red, extending their recent phase of relative weakness. This suggests that risk appetite remains selective, with investors preferring large-cap stability over broader market exposure. The lack of participation from mid and smallcaps is also a sign that the ongoing market structure is not entirely healthy beneath the surface."],
+
+["Global Cues & Market Sentiment","On the macro front, sentiment remained cautious. Rising crude oil prices, hovering near elevated levels, and ongoing geopolitical tensions—particularly around the US–Iran situation—kept traders on edge. Foreign Institutional Investors (FIIs), however, continued their buying trend for the third consecutive session, which helped limit downside and provided some stability to the indices. Still, the overall tone of the market suggests a “wait-and-watch” approach, with participants looking for clearer directional cues."]
+
 ];
 
 function loadFileNews(){
-let text = newsData.map(n=>`• ${n[0]}: ${n[1]}`).join("  ");
-document.getElementById("fileNews").innerText=text;
+let html = newsData.map(n=>`
+<div class="news-point">
+• <strong>${n[0]}</strong><br>
+<span>${n[1]}</span>
+</div>
+`).join("");
+
+document.getElementById("fileNews").innerHTML = html;
 }
 
 // TIME
@@ -252,7 +269,7 @@ box.scrollTop += 1;
 if(box.scrollTop + box.clientHeight >= box.scrollHeight){
 box.scrollTop = 0;
 }
-},50);
+},70);
 }
 
 function stopAutoScroll(){
@@ -262,7 +279,7 @@ clearInterval(scrollInterval);
 box.addEventListener("mouseenter", stopAutoScroll);
 box.addEventListener("mouseleave", startAutoScroll);
 
-// LIVE NEWS
+// LIVE NEWS API
 async function loadLiveNews(){
 try{
 let url="https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=5aa9df9361a0443b8f950f85c1dff11a";
