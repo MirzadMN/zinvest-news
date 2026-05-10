@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
 <title>Zinvest — Market Brief</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -42,39 +41,27 @@ body{
 }
 
 /* NOISE */
-
 body::before{
   content:'';
   position:fixed;
   inset:0;
-
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-
   opacity:0.03;
-
   pointer-events:none;
 }
 
 /* NAVBAR */
-
 nav{
   position:fixed;
-  top:0;
-  left:0;
+  top:0; left:0;
   width:100%;
-
   display:flex;
   justify-content:space-between;
   align-items:center;
-
   padding:22px 60px;
-
   z-index:100;
-
   border-bottom:1px solid var(--border);
-
   background:rgba(8,8,12,0.78);
-
   backdrop-filter:blur(20px);
   -webkit-backdrop-filter:blur(20px);
 }
@@ -82,139 +69,83 @@ nav{
 .nav-logo{
   text-decoration:none;
   color:var(--text);
-
   font-family:'Cormorant Garamond',serif;
-
   font-size:1.8rem;
   font-weight:600;
   letter-spacing:.08em;
 }
-
-.nav-logo span{
-  color:var(--red);
-}
+.nav-logo span{ color:var(--red); }
 
 .nav-links{
   display:flex;
   align-items:center;
   gap:34px;
 }
-
 .nav-links a{
   text-decoration:none;
   color:var(--muted);
-
   text-transform:uppercase;
-
   font-size:.76rem;
   letter-spacing:.18em;
-
   transition:.3s ease;
 }
-
-.nav-links a:hover{
-  color:var(--text);
-}
+.nav-links a:hover{ color:var(--text); }
 
 /* TICKER */
-
 .market-ticker{
-
   position:fixed;
-
-  top:82px;
-  left:0;
-
+  top:82px; left:0;
   width:100%;
   height:46px;
-
   overflow:hidden;
-
   z-index:90;
-
   border-top:1px solid var(--border);
   border-bottom:1px solid var(--border);
-
   background:rgba(255,255,255,0.03);
-
   backdrop-filter:blur(18px);
   -webkit-backdrop-filter:blur(18px);
 }
 
 .ticker-wrapper{
-  width:100%;
-  height:100%;
+  width:100%; height:100%;
   overflow:hidden;
-
   display:flex;
   align-items:center;
 }
 
 .ticker-track{
-
   display:flex;
   align-items:center;
-
   width:max-content;
-
   animation:tickerScroll 40s linear infinite;
 }
-
-.ticker-track:hover{
-  animation-play-state:paused;
-}
+.ticker-track:hover{ animation-play-state:paused; }
 
 .ticker-item{
-
   display:flex;
   align-items:center;
-
   gap:12px;
-
   padding:0 55px;
-
   white-space:nowrap;
-
   text-transform:uppercase;
-
   font-size:.82rem;
-
   letter-spacing:.08em;
 }
-
-.ticker-name{
-  color:var(--text);
-}
-
-.ticker-value{
-  color:var(--green);
-}
-
-.ticker-negative{
-  color:var(--red);
-}
+.ticker-name{ color:var(--text); }
+.ticker-value{ color:var(--green); }
+.ticker-negative{ color:var(--red); }
 
 @keyframes tickerScroll{
-
-  0%{
-    transform:translateX(0);
-  }
-
-  100%{
-    transform:translateX(-50%);
-  }
-
+  0%{ transform:translateX(0); }
+  100%{ transform:translateX(-50%); }
 }
 
 /* MAIN */
-
 .main{
   width:100%;
   min-height:100vh;
-
   padding-top:180px;
   padding-bottom:100px;
-
   display:flex;
   justify-content:center;
 }
@@ -222,383 +153,288 @@ nav{
 .content{
   width:100%;
   max-width:960px;
-
   padding:0 24px;
-
   position:relative;
   z-index:2;
 }
 
 /* GLOW */
-
 .glow{
   position:fixed;
-
   width:600px;
   height:600px;
-
   background:radial-gradient(circle, rgba(224,53,53,0.13) 0%, transparent 70%);
-
   filter:blur(90px);
-
-  top:10%;
-  left:50%;
-
+  top:10%; left:50%;
   transform:translateX(-50%);
-
   z-index:0;
 }
 
 /* TITLES */
-
 .title{
-
   font-family:'Cormorant Garamond',serif;
-
   font-size:clamp(3rem,7vw,5.8rem);
-
   text-align:center;
-
   margin-bottom:12px;
-
   letter-spacing:.05em;
 }
-
-.title span{
-  color:var(--red);
-}
+.title span{ color:var(--red); }
 
 .subtitle{
-
   text-align:center;
-
   color:var(--muted);
-
   text-transform:uppercase;
-
   font-size:.76rem;
-
   letter-spacing:.3em;
+  margin-bottom:54px;
+}
 
-  margin-bottom:70px;
+/* SECTION DIVIDER */
+.section-divider{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  margin-bottom:32px;
+}
+.divider-line{
+  flex:1;
+  height:1px;
+  background:var(--border);
+}
+.divider-label{
+  color:var(--muted);
+  font-size:.68rem;
+  letter-spacing:.28em;
+  text-transform:uppercase;
 }
 
 /* MARKET CARD */
-
 .market-card{
-
   width:100%;
-
   border-radius:30px;
-
   background:rgba(255,255,255,0.03);
-
   border:1px solid var(--border);
-
   backdrop-filter:blur(20px);
   -webkit-backdrop-filter:blur(20px);
-
   padding:40px;
-
   box-shadow:0 20px 60px rgba(0,0,0,0.35);
 }
 
 .market-top{
-
   display:flex;
   justify-content:space-between;
   align-items:center;
-
   gap:20px;
-
   flex-wrap:wrap;
-
   margin-bottom:30px;
 }
 
 .market-heading{
-
   text-transform:uppercase;
-
   letter-spacing:.14em;
-
   font-size:1.1rem;
 }
 
 .last-updated{
-
   color:var(--muted);
-
   font-size:.76rem;
-
   letter-spacing:.15em;
-
   text-transform:uppercase;
 }
 
+/* BRIEF — paragraph rendering */
 .market-brief{
-
   color:#d6d1ca;
-
   line-height:2;
-
   font-size:1rem;
+}
+.market-brief p{
+  margin-bottom:1.5em;
+}
+.market-brief p:last-child{
+  margin-bottom:0;
+}
+
+/* SKELETON loader */
+.skeleton-wrap{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+.skel{
+  height:13px;
+  background:rgba(255,255,255,0.05);
+  border-radius:4px;
+  animation:shimmer 1.6s ease-in-out infinite;
+}
+.skel:nth-child(1){ width:100%; }
+.skel:nth-child(2){ width:88%; }
+.skel:nth-child(3){ width:94%; }
+.skel:nth-child(4){ width:72%; }
+
+@keyframes shimmer{
+  0%,100%{ opacity:.3; }
+  50%{ opacity:.75; }
 }
 
 /* MOBILE */
-
 @media(max-width:768px){
-
-  nav{
-    padding:18px 20px;
-  }
-
-  .nav-links{
-    gap:16px;
-  }
-
-  .nav-links a{
-    font-size:.62rem;
-  }
-
-  .ticker-item{
-    padding:0 30px;
-    font-size:.72rem;
-  }
-
-  .market-card{
-    padding:28px;
-  }
-
-  .market-brief{
-    font-size:.92rem;
-  }
-
+  nav{ padding:18px 20px; }
+  .nav-links{ gap:16px; }
+  .nav-links a{ font-size:.62rem; }
+  .ticker-item{ padding:0 30px; font-size:.72rem; }
+  .market-card{ padding:28px; }
+  .market-brief{ font-size:.92rem; }
 }
 
 </style>
 </head>
-
 <body>
 
 <div class="glow"></div>
 
 <!-- NAVBAR -->
-
 <nav>
-
-  <a href="https://zinvestbm.onrender.com" class="nav-logo">
-
-    Zin<span>vest</span>
-
-  </a>
-
+  <a href="https://zinvestbm.onrender.com" class="nav-logo">Zin<span>vest</span></a>
   <div class="nav-links">
-
-    <a href="#">Products</a>
     <a href="#">News</a>
     <a href="#">Contact</a>
-
   </div>
-
 </nav>
 
 <!-- MARKET TICKER -->
-
 <div class="market-ticker">
-
   <div class="ticker-wrapper">
-
     <div class="ticker-track" id="tickerTrack"></div>
-
   </div>
-
 </div>
 
 <!-- MAIN -->
-
 <div class="main">
-
   <div class="content">
 
-    <h1 class="title">
+    <h1 class="title">Market <span>Brief</span></h1>
+    <p class="subtitle">Indian Markets Overview</p>
 
-      Market <span>Brief</span>
-
-    </h1>
-
-    <p class="subtitle">
-
-      Indian Markets Overview
-
-    </p>
+    <!-- Divider label pulled from Supabase; defaults to "Market Report" -->
+    <div class="section-divider">
+      <div class="divider-line"></div>
+      <div class="divider-label" id="sectionLabel">Market Report</div>
+      <div class="divider-line"></div>
+    </div>
 
     <div class="market-card">
-
       <div class="market-top">
-
-        <div class="market-heading">
-
-          Daily Market Brief
-
-        </div>
-
-        <div class="last-updated" id="lastUpdated">
-
-          LAST UPDATED — LOADING...
-
-        </div>
-
+        <!-- Card title comes from Supabase market_brief.title column -->
+        <div class="market-heading" id="cardTitle">Daily Market Brief</div>
+        <div class="last-updated" id="lastUpdated">LAST UPDATED — LOADING...</div>
       </div>
-
       <div class="market-brief" id="marketBrief">
-
-        Loading market brief...
-
+        <div class="skeleton-wrap">
+          <div class="skel"></div>
+          <div class="skel"></div>
+          <div class="skel"></div>
+          <div class="skel"></div>
+        </div>
       </div>
-
     </div>
 
   </div>
-
 </div>
-
-<!-- SUPABASE -->
 
 <script type="module">
 
-import { createClient }
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
-
-/* =========================
-   SUPABASE CONFIG
-========================= */
-
+/* ── SUPABASE ── */
 const supabaseUrl = 'https://blsgydcxoivtckihtmag.supabase.co'
-
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsc2d5ZGN4b2l2dGNraWh0bWFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwMjkwNTYsImV4cCI6MjA5MzYwNTA1Nn0.DWPvB66OO5_KAHt_NGDHjSeU213p9iSCPTth7ecAeeo'
+const supabase    = createClient(supabaseUrl, supabaseKey)
 
-const supabase = createClient(
-  supabaseUrl,
-  supabaseKey
-)
-
-/* =========================
-   LOAD TICKER
-========================= */
-
+/* ── TICKER ── */
 async function loadTicker(){
-
   const { data, error } = await supabase
-
     .from('market_ticker')
-
     .select('*')
-
-    .order('id', { ascending:true })
-
-  if(error){
-
-    console.log(error)
-
-    return
-  }
+    .order('id', { ascending: true })
+  if(error){ console.error(error); return }
 
   const track = document.getElementById('tickerTrack')
-
   let items = ''
-
   data.forEach(item => {
-
     items += `
-
       <div class="ticker-item">
-
-        <span class="ticker-name">
-
-          ${item.index_name}
-
+        <span class="ticker-name">${item.index_name}</span>
+        <span class="${item.positive ? 'ticker-value' : 'ticker-negative'}">
+          ${item.value} ${item.change}
         </span>
-
-        <span class="${
-          item.positive
-          ? 'ticker-value'
-          : 'ticker-negative'
-        }">
-
-          ${item.value}
-
-          ${item.change}
-
-        </span>
-
-      </div>
-
-    `
+      </div>`
   })
-
-  /* duplicate for seamless scroll */
-
-  track.innerHTML = items + items
+  track.innerHTML = items + items   /* duplicate for seamless loop */
 }
 
-/* =========================
-   LOAD MARKET BRIEF
-========================= */
+/* ── FORMAT PLAIN TEXT → PARAGRAPHS ── */
+function formatBrief(raw){
+  if(!raw) return '<p>No brief available.</p>'
 
-async function loadMarketBrief(){
+  /* If already HTML, render directly */
+  if(/<(p|div|ul|ol|h[1-6])\b/i.test(raw)) return raw
 
-  const { data, error } = await supabase
+  /* Split on double newlines */
+  let blocks = raw
+    .split(/\n{2,}/)
+    .map(b => b.replace(/\n/g, ' ').trim())
+    .filter(Boolean)
 
-    .from('market_brief')
-
-    .select('*')
-
-    .order('updated_at', { ascending:false })
-
-    .limit(1)
-
-    .single()
-
-  if(error){
-
-    console.log(error)
-
-    return
+  /* Fallback: one big block → chunk every ~3 sentences */
+  if(blocks.length === 1){
+    const sentences = raw.match(/[^.!?]+[.!?]+/g) || [raw]
+    blocks = []
+    for(let i = 0; i < sentences.length; i += 3){
+      blocks.push(sentences.slice(i, i + 3).join(' ').trim())
+    }
   }
 
-  document.getElementById('marketBrief').innerHTML =
-    data.brief
-
-  const date = new Date(data.updated_at)
-
-  document.getElementById('lastUpdated').innerHTML =
-
-    `LAST UPDATED — ${date.toLocaleString('en-IN')}`
+  return blocks.map(b => `<p>${b}</p>`).join('')
 }
 
-/* =========================
-   INITIAL LOAD
-========================= */
+/* ── MARKET BRIEF ── */
+async function loadMarketBrief(){
+  const { data, error } = await supabase
+    .from('market_brief')
+    .select('*')
+    .order('updated_at', { ascending: false })
+    .limit(1)
+    .single()
+  if(error){ console.error(error); return }
 
-loadTicker()
+  /* Title — from Supabase column 'title', else keep default */
+  if(data.title){
+    document.getElementById('cardTitle').textContent = data.title
+  }
 
-loadMarketBrief()
+  /* Section divider label — from Supabase column 'section_label', else keep "Market Report" */
+  if(data.section_label){
+    document.getElementById('sectionLabel').textContent = data.section_label
+  }
 
-/* =========================
-   AUTO REFRESH
-========================= */
+  /* Brief body as paragraphs */
+  document.getElementById('marketBrief').innerHTML = formatBrief(data.brief)
 
-setInterval(() => {
+  /* Timestamp */
+  const d = new Date(data.updated_at)
+  document.getElementById('lastUpdated').textContent =
+    'LAST UPDATED — ' + d.toLocaleString('en-IN')
+}
 
-  loadTicker()
+/* ── INIT + AUTO-REFRESH ── */
+async function refresh(){
+  await Promise.all([loadTicker(), loadMarketBrief()])
+}
 
-  loadMarketBrief()
-
-}, 10000)
+refresh()
+setInterval(refresh, 10000)
 
 </script>
-
 </body>
 </html>
